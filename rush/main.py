@@ -1,47 +1,73 @@
 from checkmate import checkmate
+import io
+import sys
+
+
+def run_test(name, board, expected):
+    captured_output = io.StringIO()
+    sys.stdout = captured_output
+
+    checkmate(board)
+
+    sys.stdout = sys.__stdout__
+    result = captured_output.getvalue().strip()
+    status = "PASS" if result == expected else "FAIL"
+
+    print(f"{name:<22} Expected: {expected:<7} Got: {result:<7} {status}")
+
 
 def main():
-    board1 = """R.K.
-....
-....
-...."""
-    print("Example 1 (Rook check):")
-    checkmate(board1)
+    print("\nCHECKMATE TEST SUITE\n")
 
-    board2 = """....
-.K..
-..B.
-...."""
-    print("\nExample 2 (Bishop check):")
-    checkmate(board2)
-
-    board3 = """Q...
-.K..
-....
-...."""
-    print("\nExample 3 (Queen check):")
-    checkmate(board3)
-
-    board4 = """....
-PK..
-....
-...."""
-    print("\nExample 4 (Pawn check):")
-    checkmate(board4)
-
-    board5 = """....
-.K..
-.R..
-...."""
-    print("\nExample 5 (Vertical Rook check):")
-    checkmate(board5)
-
-    board6 = """R...
-.K..
+    run_test("Not square board", """R...
+.K.....
 ..P.
-...."""
-    print("\nExample 6 (Mixed pieces):")
-    checkmate(board6)
+....""", "Error")
+
+    run_test("No King", """R...
+....
+..P.
+....""", "Error")
+
+    run_test("Multiple Kings", """K...
+.K..
+....
+....""", "Error")
+
+    run_test("Bishop blocked", """B...
+.P..
+..K.
+....""", "Fail")
+
+    run_test("Rook blocked", """R.P.
+.K..
+....
+....""", "Fail")
+
+    run_test("Queen diagonal long", """Q...
+....
+....
+...K""", "Success")
+
+    run_test("Pawn check", """....
+..P.
+.K..
+....""", "Success")
+
+    run_test("Random characters", """A..R
+.ZK.
+..T.
+....""", "Success")
+
+    run_test("2x2 board", """.K
+R.""", "Success")
+
+    run_test("King corner", """K...
+....
+....
+...Q""", "Success")
+
+    print("\nEND OF TESTS\n")
 
 
 if __name__ == "__main__":
