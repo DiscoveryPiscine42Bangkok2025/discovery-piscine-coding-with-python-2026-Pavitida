@@ -2,12 +2,10 @@ def checkmate(board):
     rows = board.strip().split("\n")
     n = len(rows)
 
-    # Validate square board
     if n == 0 or any(len(row) != n for row in rows):
         print("Error")
         return
 
-    # Find King
     kings = [(r, c) for r in range(n) for c in range(n) if rows[r][c] == 'K']
     if len(kings) != 1:
         print("Error")
@@ -20,8 +18,6 @@ def checkmate(board):
     else:
         print("Fail")
 
-
-# -----------------------------
 
 def is_enemy(piece):
     return piece in "PRBQ"
@@ -43,7 +39,7 @@ def king_in_check(board, king):
                 if board[r][c] == 'P':
                     return True
 
-    # --- Bishop / Queen (diagonal) ---
+   
     for dr, dc in [(-1,-1), (-1,1), (1,-1), (1,1)]:
         r, c = kr + dr, kc + dc
         while 0 <= r < n and 0 <= c < n:
@@ -54,14 +50,12 @@ def king_in_check(board, king):
                     return True
                 break
 
-            if is_piece(piece):  # other piece blocks
+            if is_piece(piece):  
                 break
 
-            # otherwise empty square → continue
             r += dr
             c += dc
 
-    # --- Rook / Queen (straight) ---
     for dr, dc in [(-1,0), (1,0), (0,-1), (0,1)]:
         r, c = kr + dr, kc + dc
         while 0 <= r < n and 0 <= c < n:
